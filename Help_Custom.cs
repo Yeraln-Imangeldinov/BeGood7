@@ -7,8 +7,14 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 
+using System.Drawing;
+using System.ComponentModel;
+using System.Windows.Forms;
+
+using EnvDTE;
 namespace BeGood3
 {
+    
     /// <summary>
     /// Command handler
     /// </summary>
@@ -39,10 +45,10 @@ namespace BeGood3
         {
             this.package = package ?? throw new ArgumentNullException(nameof(package));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
-
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
             commandService.AddCommand(menuItem);
+            
         }
 
         /// <summary>
@@ -88,18 +94,61 @@ namespace BeGood3
         /// <param name="e">Event args.</param>
         private void Execute(object sender, EventArgs e)
         {
+
+            string text = "Print";
+            Form1 form2 = new Form1();
+
+            // Set the opacity to 75%.
+            form2.Opacity = 0;
+            // Size the form to be 300 pixels in height and width.
+            form2.Size = new Size(1, 1);
+            // Display the form in the center of the screen.
+            form2.StartPosition = FormStartPosition.CenterScreen;
+            form2.HelpMethod(text);
+            
+            //Application.Run(form2);
             ThreadHelper.ThrowIfNotOnUIThread();
             string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
             string title = "Help_Custom";
-
             // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this.package,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            //VsShellUtilities.ShowMessageBox(
+            //    this.package,
+            //    message,
+            //    title,
+            //    OLEMSGICON.OLEMSGICON_INFO,
+            //    OLEMSGBUTTON.OLEMSGBUTTON_OK,
+            //    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            form2.Close();
         }
-    }
+    };
 }
+
+public class Form1 : System.Windows.Forms.Form
+{
+    private const string helpfile = "file://c:\\mql5.chm";
+
+
+    public Form1()
+    {
+       
+    }
+    public void HelpMethod(string arg)
+    {
+        HelpNavigator navigator = HelpNavigator.KeywordIndex;
+        Help.ShowHelp(this, helpfile, navigator, arg);
+      
+    }
+};
+
+
+
+//Sub GoogleSearchMSDN()
+//    Dim url As String
+//    Dim searchFor As TextSelection = DTE.ActiveDocument.Selection()
+//    If searchFor.Text<> "" Then
+//        url = "www.google.com/search?q=MSDN+" + searchFor.Text
+//    Else
+//        url = "www.google.com/search?q=MSDN"
+//    End If
+//    DTE.ExecuteCommand("View.URL", url)
+//End Sub

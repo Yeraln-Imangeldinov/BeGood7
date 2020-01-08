@@ -25,6 +25,7 @@ namespace BeGood3
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(BeGood3Package.PackageGuidString)]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class BeGood3Package : AsyncPackage
     {
         /// <summary>
@@ -46,6 +47,7 @@ namespace BeGood3
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await Help_Custom.InitializeAsync(this);
         }
 
         #endregion

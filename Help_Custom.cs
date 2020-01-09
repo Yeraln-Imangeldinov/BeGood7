@@ -107,8 +107,8 @@ namespace BeGood3
             
             //Application.Run(form2);
             ThreadHelper.ThrowIfNotOnUIThread();
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "Help_Custom";
+           // string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
+           // string title = "Help_Custom";
             // Show a message box to prove we were here
             //VsShellUtilities.ShowMessageBox(
             //    this.package,

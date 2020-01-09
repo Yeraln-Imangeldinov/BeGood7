@@ -11,7 +11,6 @@ using System.Drawing;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-using EnvDTE;
 namespace BeGood3
 {
     

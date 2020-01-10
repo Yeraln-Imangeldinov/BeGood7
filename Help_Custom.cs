@@ -1,24 +1,36 @@
 ﻿using System;
 using System.ComponentModel.Design;
-using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
-
 using System.Drawing;
 using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace BeGood3
 {
-    
-    /// <summary>
-    /// Command handler
-    /// </summary>
+    #region Request_Data
+    public class Request_Data
+    {
+        public static string value = "bool";
+      
+        public Request_Data() 
+        {
+ 
+        }
+        public string GetValue()
+        {
+            return value;
+        }
+        public void SetValue(string arg)
+        {
+            value = arg;
+        }
+        
+    }
+    #endregion
     internal sealed class Help_Custom
     {
+        readonly Request_Data data = new Request_Data();
         /// <summary>
         /// Command ID.
         /// </summary>
@@ -103,7 +115,7 @@ namespace BeGood3
             form2.Size = new Size(1, 1);
             // Display the form in the center of the screen.
             form2.StartPosition = FormStartPosition.CenterScreen;
-            form2.HelpMethod(text);
+            form2.HelpMethod(data.GetValue());
             
             //Application.Run(form2);
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -140,14 +152,3 @@ public class Form1 : System.Windows.Forms.Form
 };
 
 
-
-//Sub GoogleSearchMSDN()
-//    Dim url As String
-//    Dim searchFor As TextSelection = DTE.ActiveDocument.Selection()
-//    If searchFor.Text<> "" Then
-//        url = "www.google.com/search?q=MSDN+" + searchFor.Text
-//    Else
-//        url = "www.google.com/search?q=MSDN"
-//    End If
-//    DTE.ExecuteCommand("View.URL", url)
-//End Sub

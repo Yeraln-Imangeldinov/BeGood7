@@ -94,7 +94,7 @@
 
   <KeyBindings>
     <KeyBinding guid="guidBeGood3PackageCmdSet" id="Help_CustomId"
-        key1="VK_LWIN" mod1="CONTROL" editor="guidVSStd97" />
+        key1="VK_RWIN" mod1="CONTROL" editor="guidVSStd97" />
   </KeyBindings>
 </CommandTable>
 

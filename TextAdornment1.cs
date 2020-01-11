@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.Text.Editor;
 using System.Windows.Input;
-
+using System.Diagnostics;
 namespace BeGood3
 {
     internal class ButtonKeyProc : KeyProcessor
@@ -19,7 +19,8 @@ namespace BeGood3
         {
             if (args.Key == Key.RightCtrl)
             {
-               
+                if (view.Selection.StreamSelectionSpan.Length > 100) return;
+                Debug.WriteLine(view.Selection.StreamSelectionSpan.Length.ToString());
                 ////Entire text output
                 //string result = view.Selection.StreamSelectionSpan.Snapshot.GetText();
                 //Debug.WriteLine("view.Selection.StreamSelectionSpan.Snapshot.GetText() -"+result);
@@ -50,7 +51,7 @@ namespace BeGood3
                 //for (int i = 0; i < total; i++)
                 //{
                 //    abs[i] = view.Selection.StreamSelectionSpan.Snapshot.GetText()
-
+                
                 //}
 
                

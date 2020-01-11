@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 using System.Windows.Forms;
 using System.IO;
+
 namespace BeGood3
 {
     public class OptionPageGrid : DialogPage

@@ -6,10 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Settings;
-using Microsoft.VisualStudio.Shell.Settings;
-using System.Globalization;
-using System.Diagnostics;
+
 namespace BeGood3
 {
     #region Request_Data
@@ -42,24 +39,7 @@ namespace BeGood3
     #endregion
     internal sealed class Help_Custom
     {
-        //private void MenuItemCallback(object sender, EventArgs e)
-        //{
-        //    SettingsManager settingsManager = new ShellSettingsManager(this.package);
-        //    WritableSettingsStore userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
-        //    Debug.WriteLine("MenuItemCallback");
-        //    // Find out whether Notepad is already an External Tool.
-        //    int toolCount = userSettingsStore.GetInt32("External Tools", "ToolNumKeys");
-        //    bool hasNotepad = false;
-        //    CompareInfo Compare = CultureInfo.InvariantCulture.CompareInfo;
-        //    for (int i = 0; i < toolCount; i++)
-        //    {
-        //        if (Compare.IndexOf(userSettingsStore.GetString("External Tools", "ToolCmd" + i), "Notepad", CompareOptions.IgnoreCase) >= 0)
-        //        {
-        //            hasNotepad = true;
-        //            break;
-        //        }
-        //    }
-        //}
+
 
         private Request_Data data;
         /// <summary>

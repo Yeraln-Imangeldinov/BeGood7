@@ -3,19 +3,23 @@ using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
 using Task = System.Threading.Tasks.Task;
 using System.Drawing;
-using System.ComponentModel;
 using System.Windows.Forms;
-
+using System.IO;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Settings;
+using Microsoft.VisualStudio.Shell.Settings;
+using System.Globalization;
+using System.Diagnostics;
 namespace BeGood3
 {
     #region Request_Data
     public class Request_Data
     {
-        public static string value = "bool";
-      
+        private static string value = "bool";
+        private static string path_value = "";
+
         public Request_Data() 
         {
- 
         }
         public string GetValue()
         {
@@ -25,12 +29,39 @@ namespace BeGood3
         {
             value = arg;
         }
-        
+        public void SetValuePath(string arg)
+        {
+            path_value = arg;
+        }
+        public string GetValuePath()
+        {
+            return path_value;
+        }
     }
+
     #endregion
     internal sealed class Help_Custom
     {
-        readonly Request_Data data = new Request_Data();
+        //private void MenuItemCallback(object sender, EventArgs e)
+        //{
+        //    SettingsManager settingsManager = new ShellSettingsManager(this.package);
+        //    WritableSettingsStore userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
+        //    Debug.WriteLine("MenuItemCallback");
+        //    // Find out whether Notepad is already an External Tool.
+        //    int toolCount = userSettingsStore.GetInt32("External Tools", "ToolNumKeys");
+        //    bool hasNotepad = false;
+        //    CompareInfo Compare = CultureInfo.InvariantCulture.CompareInfo;
+        //    for (int i = 0; i < toolCount; i++)
+        //    {
+        //        if (Compare.IndexOf(userSettingsStore.GetString("External Tools", "ToolCmd" + i), "Notepad", CompareOptions.IgnoreCase) >= 0)
+        //        {
+        //            hasNotepad = true;
+        //            break;
+        //        }
+        //    }
+        //}
+
+        private Request_Data data;
         /// <summary>
         /// Command ID.
         /// </summary>
@@ -46,6 +77,8 @@ namespace BeGood3
         /// </summary>
         private readonly AsyncPackage package;
 
+        //Form help methods
+        Form1 form2;
         /// <summary>
         /// Initializes a new instance of the <see cref="Help_Custom"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
@@ -59,9 +92,25 @@ namespace BeGood3
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
             commandService.AddCommand(menuItem);
-            
-        }
 
+            // retrieve and set  file path from options
+            //Create form with path from options
+            BeGood3Package myToolsOptionsPackage = this.package as BeGood3Package;
+            form2 = new Form1(myToolsOptionsPackage.OptionInteger);
+
+            data = new Request_Data();
+            //Set Path to static var 
+            data.SetValuePath(myToolsOptionsPackage.OptionInteger);
+
+            // Set the opacity to 75%.
+            form2.Opacity = 0;
+            // Size the form to be 300 pixels in height and width.
+            form2.Size = new Size(1, 1);
+            // Display the form in the center of the screen.
+            form2.StartPosition = FormStartPosition.CenterScreen;
+
+        }
+        
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
@@ -105,50 +154,46 @@ namespace BeGood3
         /// <param name="e">Event args.</param>
         private void Execute(object sender, EventArgs e)
         {
-
-            string text = "Print";
-            Form1 form2 = new Form1();
-
-            // Set the opacity to 75%.
-            form2.Opacity = 0;
-            // Size the form to be 300 pixels in height and width.
-            form2.Size = new Size(1, 1);
-            // Display the form in the center of the screen.
-            form2.StartPosition = FormStartPosition.CenterScreen;
-            form2.HelpMethod(data.GetValue());
-            
-            //Application.Run(form2);
             ThreadHelper.ThrowIfNotOnUIThread();
-           // string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-           // string title = "Help_Custom";
-            // Show a message box to prove we were here
-            //VsShellUtilities.ShowMessageBox(
-            //    this.package,
-            //    message,
-            //    title,
-            //    OLEMSGICON.OLEMSGICON_INFO,
-            //    OLEMSGBUTTON.OLEMSGBUTTON_OK,
-            //    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-            form2.Close();
+            if (!File.Exists(data.GetValuePath()))
+            {
+                
+                string title = "Error! “File not founded";
+                string mess = "To add see: TOOLS->options->Custom Help Category. file://c:\\File.chm";
+                VsShellUtilities.ShowMessageBox(
+                               this.package,
+                               mess,
+                               title,
+                               OLEMSGICON.OLEMSGICON_INFO,
+                               OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                               OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                return;
+            }
+            else 
+            {
+                form2.HelpMethod();
+               // form2.Close();
+            }
         }
     };
-}
 
-public class Form1 : System.Windows.Forms.Form
-{
-    private const string helpfile = "file://c:\\mql5.chm";
-
-
-    public Form1()
+    public class Form1 : System.Windows.Forms.Form
     {
        
-    }
-    public void HelpMethod(string arg)
-    {
-        HelpNavigator navigator = HelpNavigator.KeywordIndex;
-        Help.ShowHelp(this, helpfile, navigator, arg);
-      
-    }
-};
+        Request_Data data;
 
+        public Form1(string setstr)
+        {
+            
+            data = new Request_Data();
+            data.SetValuePath(setstr);
+        }
+        public void HelpMethod()
+        {
+            HelpNavigator navigator = HelpNavigator.KeywordIndex;
+            Help.ShowHelp(this, data.GetValuePath(), navigator, data.GetValue());
+
+        }
+    }
+}
 

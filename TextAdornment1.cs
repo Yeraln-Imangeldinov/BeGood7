@@ -1,12 +1,11 @@
 ﻿using Microsoft.VisualStudio.Text.Editor;
-using System.Diagnostics;
 using System.Windows.Input;
-using Microsoft.VisualStudio.Text;
+
 namespace BeGood3
 {
     internal class ButtonKeyProc : KeyProcessor
     {
-        internal static event KeyEventHandler KeyDownEvent;
+       
         private readonly ITextView view;
         Request_Data data;
         public ButtonKeyProc(ITextView textView)
@@ -20,13 +19,13 @@ namespace BeGood3
         {
             if (args.Key == Key.RightCtrl)
             {
-                Debug.WriteLine("Start KeyDown method");
+               
                 ////Entire text output
                 //string result = view.Selection.StreamSelectionSpan.Snapshot.GetText();
                 //Debug.WriteLine("view.Selection.StreamSelectionSpan.Snapshot.GetText() -"+result);
 
                 string result2 = view.Selection.StreamSelectionSpan.SnapshotSpan.GetText();
-                Debug.WriteLine("view.Selection.StreamSelectionSpan.SnapshotSpan.GetText() -"+result2);
+             
                 data.SetValue(result2);
                 //int Start = view.Selection.ActivePoint.Position;
                 //int End = view.Selection.AnchorPoint.Position;
@@ -54,7 +53,7 @@ namespace BeGood3
 
                 //}
 
-                Debug.WriteLine("End KeyDown method");
+               
             }
         }
 

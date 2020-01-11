@@ -3,9 +3,52 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.VisualStudio.Shell;
 using Task = System.Threading.Tasks.Task;
+using System.ComponentModel;
 
+using System.Windows.Forms;
+using System.IO;
 namespace BeGood3
 {
+    public class OptionPageGrid : DialogPage
+    {
+
+        private string optionString = "";
+
+        [Category("Custom Help Category")]
+        [DisplayName("Custom Help")]
+        [Description("Path to file")]
+        public string OptionFilePath
+        {
+            get {return optionString; 
+            }
+            set { optionString = value;
+                    Request_Data data = new Request_Data();
+                    //Set Path to static var 
+                    data.SetValuePath(value);
+                ThreadHelper.ThrowIfNotOnUIThread();
+                if (!File.Exists(data.GetValuePath()))
+                {
+                    // Initializes the variables to pass to the MessageBox.Show method.
+                    string message = "Error! File not founded";
+                    string caption = "Error Detected in Input";
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    DialogResult result;
+
+                    // Displays the MessageBox.
+                    result = MessageBox.Show(message, caption, buttons);
+                    if (result == System.Windows.Forms.DialogResult.OK)
+                    {
+                        // Closes the parent form.
+                        return;
+                    }
+
+                   
+                }
+            }
+
+        }
+    }
+    
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
     /// </summary>
@@ -26,8 +69,19 @@ namespace BeGood3
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(BeGood3Package.PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideOptionPage(typeof(OptionPageGrid),
+    "Custom Help Category", "Custom Help Grid Page", 0, 0, true)]
     public sealed class BeGood3Package : AsyncPackage
     {
+        public string OptionInteger
+        {
+            get
+            {
+                OptionPageGrid page = (OptionPageGrid)GetDialogPage(typeof(OptionPageGrid));
+                return page.OptionFilePath;
+            }
+        }
+
         /// <summary>
         /// BeGood3Package GUID string.
         /// </summary>
